@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+
+from bs4 import BeautifulSoup
+import urllib.request
+
+PKG_URL = 'https://ftp.spline.de/pub/OpenBSD/6.2/packages/amd64/'
+
+db = []
+
+def dump_db():
+	for pkg in db:
+		print(pkg)
+
+def search(needle):
+	fetch_pkglist()
+
+	for s in db:
+		if needle in s:
+			print(s)
+		
+def fetch_pkglist():
+	html = urllib.request.urlopen(PKG_URL).read()
+
+	soup = BeautifulSoup(html, 'html.parser')
+	for link in soup.findAll('a'):
+		pkg = link.string
+		if pkg == '../': 
+			continue
+		else: 
+			db.append(pkg)
+
+
+if __name__ == "__main__":
+	search(input(": "))
