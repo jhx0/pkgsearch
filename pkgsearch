@@ -1,34 +1,91 @@
 #!/usr/bin/env python3
 
-from bs4 import BeautifulSoup
-import urllib.request
+import re
+import os
+import sys
+import emoji
+import argparse
+import requests
+from os.path import exists
 
-PKG_URL = 'https://ftp.spline.de/pub/OpenBSD/6.2/packages/amd64/'
+PRG_NAME = "pkgsearch"
+PRG_VERSION = "0.2"
 
-db = []
+# Only for debugging
+DEBUG = False
 
-def dump_db():
-	for pkg in db:
-		print(pkg)
+# Change this to the closest mirror
+INDEX_URL = 'https://ftp.spline.de/pub/OpenBSD/7.1/packages/amd64/index.txt'
 
-def search(needle):
-	fetch_pkglist()
+HOME_DIR = os.getenv('HOME')
+INDEX_DOT = '.index'
+INDEX_PATH = HOME_DIR + "/" + INDEX_DOT
 
-	for s in db:
-		if needle in s:
-			print(s)
+# Flags used throughout the program
+# Do not change these
+emojiFlag = False
+indexFlag = False
+
+def getIndex():
+	if exists(INDEX_PATH) and not indexFlag:
+		if DEBUG:
+			print("[INFO] .index file already existing. Aborting download.")
+
+		return
+	else:
+		r = requests.get(INDEX_URL)
+		out = open(INDEX_PATH, "w")
+		out.write(r.text)
+
+def _printWrapper(pkg):
+	if emojiFlag:
+		print("{} {}".format(emoji.emojize(':package:'), pkg))
+	else:
+		print("{}".format(pkg))
+
+def queryIndex(needle):
+	f = open(INDEX_PATH, "r")
+	
+	while True:
+		data = f.readline()
 		
-def fetch_pkglist():
-	html = urllib.request.urlopen(PKG_URL).read()
+		if not data:
+			break
+		
+		# Removing unneeded information like size and date
+		# and convert list to string. Also, remove .tgz
+		# extension from the package name/version
+		pkg = ' '.join(data.split()[9:])[:-4]
+		
+		if re.findall(needle, pkg):
+			_printWrapper(pkg)
+			
+	f.close()
+	
+def printVersion():
+	print("{} {}".format(PRG_NAME, PRG_VERSION))
+	sys.exit(0)
 
-	soup = BeautifulSoup(html, 'html.parser')
-	for link in soup.findAll('a'):
-		pkg = link.string
-		if pkg == '../': 
-			continue
-		else: 
-			db.append(pkg)
-
+def main():
+	parser = argparse.ArgumentParser()
+	parser.add_argument("package")
+	parser.add_argument("-e", "--emoji", help="turn on emoji output",
+						action="store_true")
+	parser.add_argument("-i", "--index", help="download index",
+						action="store_true")
+						
+	args = parser.parse_args()
+	
+	global emojiFlag
+	emojiFlag = args.emoji
+	global indexFlag
+	indexFlag = args.index
+		
+	needle = args.package
+	
+	getIndex()
+		
+	queryIndex(needle)
 
 if __name__ == "__main__":
-	search(input(": "))
+	main()
