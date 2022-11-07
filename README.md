@@ -7,6 +7,9 @@
 ```
 usage: pkgsearch [-h] [-e] [-i] package
 ```
+**Example Output**
+
+![pkgsearch](https://user-images.githubusercontent.com/37046652/200329416-7aedd520-88ae-4a48-a46f-d59801da7be5.png)
 
 ## Install
 
