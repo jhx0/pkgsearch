@@ -15,7 +15,7 @@ PRG_VERSION = "0.2"
 DEBUG = False
 
 # Change this to the closest mirror
-INDEX_URL = 'https://ftp.spline.de/pub/OpenBSD/7.1/packages/amd64/index.txt'
+INDEX_URL = 'https://ftp.spline.de/pub/OpenBSD/7.2/packages/amd64/index.txt'
 
 HOME_DIR = os.getenv('HOME')
 INDEX_DOT = '.index'
@@ -37,11 +37,14 @@ def getIndex():
 		out = open(INDEX_PATH, "w")
 		out.write(r.text)
 
-def _printWrapper(pkg):
+def _printWrapper(pkg, size_mbytes):
 	if emojiFlag:
-		print("{} {}".format(emoji.emojize(':package:'), pkg))
+		# 57 was chosen since the longest str was 55 chars
+		# This should cover every package name currently in
+		# the OpenBSD repository
+		print("{} {:<57} - Size: {:.2f}MB".format(emoji.emojize(':package:'), pkg, size_mbytes))
 	else:
-		print("{}".format(pkg))
+		print("{:<57} - Size: {:.2f}MB".format(pkg, size_mbytes))
 
 def queryIndex(needle):
 	f = open(INDEX_PATH, "r")
@@ -51,14 +54,20 @@ def queryIndex(needle):
 		
 		if not data:
 			break
-		
+
 		# Removing unneeded information like size and date
 		# and convert list to string. Also, remove .tgz
 		# extension from the package name/version
 		pkg = ' '.join(data.split()[9:])[:-4]
 		
 		if re.findall(needle, pkg):
-			_printWrapper(pkg)
+			# Get the size of the given package in bytes
+			size_bytes = data.split()[4:5]
+
+			# Convert to megabytes
+			size_mbytes = int(size_bytes[0]) / 1048576
+
+			_printWrapper(pkg, size_mbytes)
 			
 	f.close()
 	
