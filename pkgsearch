@@ -44,7 +44,11 @@ def _printWrapper(pkg, size_mbytes):
         # 57 was chosen since the longest str was 55 chars
         # This should cover every package name currently in
         # the OpenBSD repository
-        print("{} {:<57} - Size: {:.2f}MB".format(emoji.emojize(':package:'), pkg, size_mbytes))
+        print(
+            "{} {:<57} - Size: {:.2f}MB".format(
+                emoji.emojize(':package:'), pkg, size_mbytes
+            )
+        )
     else:
         print("{:<57} - Size: {:.2f}MB".format(pkg, size_mbytes))
 
@@ -83,10 +87,12 @@ def printVersion():
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("package")
-    parser.add_argument("-e", "--emoji", help="turn on emoji output",
-                        action="store_true")
-    parser.add_argument("-i", "--index", help="download index",
-                        action="store_true")
+    parser.add_argument(
+        "-e", "--emoji", help="turn on emoji output", action="store_true"
+    )
+    parser.add_argument(
+        "-i", "--index", help="download index", action="store_true"
+    )
 
     args = parser.parse_args()
 
