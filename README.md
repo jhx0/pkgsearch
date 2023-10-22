@@ -23,7 +23,7 @@ usage: pkgsearch [-h] [-e] [-i] package
 $ ./pkgsearch python3
 ```
 
-pkgsearch was tested on the current OpenBSD release 7.2 but should also work on older systems.
+pkgsearch was tested on the current OpenBSD release 7.3 but should also work on older systems.
 
 ## Hint
 Make sure you set your desired mirror. This can be done by changing the **INDEX_URL** variable in the pkgsearch script.
@@ -31,6 +31,8 @@ Make sure you set your desired mirror. This can be done by changing the **INDEX_
 **Example:**
 ```
 ...
-INDEX_URL = 'https://ftp.spline.de/pub/OpenBSD/7.2/packages/amd64/index.txt'
+INDEX_URL = 'https://ftp.spline.de/pub/OpenBSD/7.3/packages/amd64/index.txt'
 ...
 ```
+## Thanks
+**Laurent Cheylus (https://github.com/lcheylus)** - Code cleanup and improvements (PEP8)   
