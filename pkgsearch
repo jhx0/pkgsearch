@@ -26,75 +26,87 @@ INDEX_PATH = HOME_DIR + "/" + INDEX_DOT
 emojiFlag = False
 indexFlag = False
 
-def getIndex():
-	if exists(INDEX_PATH) and not indexFlag:
-		if DEBUG:
-			print("[INFO] .index file already existing. Aborting download.")
 
-		return
-	else:
-		r = requests.get(INDEX_URL)
-		out = open(INDEX_PATH, "w")
-		out.write(r.text)
+def getIndex():
+    if exists(INDEX_PATH) and not indexFlag:
+        if DEBUG:
+            print("[INFO] .index file already existing. Aborting download.")
+
+        return
+    else:
+        r = requests.get(INDEX_URL)
+        out = open(INDEX_PATH, "w")
+        out.write(r.text)
+
 
 def _printWrapper(pkg, size_mbytes):
-	if emojiFlag:
-		# 57 was chosen since the longest str was 55 chars
-		# This should cover every package name currently in
-		# the OpenBSD repository
-		print("{} {:<57} - Size: {:.2f}MB".format(emoji.emojize(':package:'), pkg, size_mbytes))
-	else:
-		print("{:<57} - Size: {:.2f}MB".format(pkg, size_mbytes))
+    if emojiFlag:
+        # 57 was chosen since the longest str was 55 chars
+        # This should cover every package name currently in
+        # the OpenBSD repository
+        print(
+            "{} {:<57} - Size: {:.2f}MB".format(
+                emoji.emojize(':package:'), pkg, size_mbytes
+            )
+        )
+    else:
+        print("{:<57} - Size: {:.2f}MB".format(pkg, size_mbytes))
+
 
 def queryIndex(needle):
-	f = open(INDEX_PATH, "r")
-	
-	while True:
-		data = f.readline()
-		
-		if not data:
-			break
+    f = open(INDEX_PATH, "r")
 
-		# Removing unneeded information like size and date
-		# and convert list to string. Also, remove .tgz
-		# extension from the package name/version
-		pkg = ' '.join(data.split()[9:])[:-4]
-		
-		if re.findall(needle, pkg):
-			# Get the size of the given package in bytes
-			size_bytes = data.split()[4:5]
+    while True:
+        data = f.readline()
 
-			# Convert to megabytes
-			size_mbytes = int(size_bytes[0]) / 1048576
+        if not data:
+            break
 
-			_printWrapper(pkg, size_mbytes)
-			
-	f.close()
-	
+        # Removing unneeded information like size and date
+        # and convert list to string. Also, remove .tgz
+        # extension from the package name/version
+        pkg = ' '.join(data.split()[9:])[:-4]
+
+        if re.findall(needle, pkg):
+            # Get the size of the given package in bytes
+            size_bytes = data.split()[4:5]
+
+            # Convert to megabytes
+            size_mbytes = int(size_bytes[0]) / 1048576
+
+            _printWrapper(pkg, size_mbytes)
+
+    f.close()
+
+
 def printVersion():
-	print("{} {}".format(PRG_NAME, PRG_VERSION))
-	sys.exit(0)
+    print("{} {}".format(PRG_NAME, PRG_VERSION))
+    sys.exit(0)
+
 
 def main():
-	parser = argparse.ArgumentParser()
-	parser.add_argument("package")
-	parser.add_argument("-e", "--emoji", help="turn on emoji output",
-						action="store_true")
-	parser.add_argument("-i", "--index", help="download index",
-						action="store_true")
-						
-	args = parser.parse_args()
-	
-	global emojiFlag
-	emojiFlag = args.emoji
-	global indexFlag
-	indexFlag = args.index
-		
-	needle = args.package
-	
-	getIndex()
-		
-	queryIndex(needle)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("package")
+    parser.add_argument(
+        "-e", "--emoji", help="turn on emoji output", action="store_true"
+    )
+    parser.add_argument(
+        "-i", "--index", help="download index", action="store_true"
+    )
+
+    args = parser.parse_args()
+
+    global emojiFlag
+    emojiFlag = args.emoji
+    global indexFlag
+    indexFlag = args.index
+
+    needle = args.package
+
+    getIndex()
+
+    queryIndex(needle)
+
 
 if __name__ == "__main__":
-	main()
+    main()
