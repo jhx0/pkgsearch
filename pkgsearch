@@ -9,7 +9,7 @@ import requests
 from os.path import exists
 
 PRG_NAME = "pkgsearch"
-PRG_VERSION = "0.2"
+PRG_VERSION = "0.3"
 
 # Only for debugging
 DEBUG = False
