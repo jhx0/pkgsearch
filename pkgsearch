@@ -34,9 +34,19 @@ def getIndex():
 
         return
     else:
-        r = requests.get(INDEX_URL)
-        out = open(INDEX_PATH, "w")
-        out.write(r.text)
+        try:
+            r = requests.get(INDEX_URL)
+        except requests.exceptions.RequestException as e:
+            print(f"[ERROR] unable to get INDEX file from URL - {e}")
+            return
+
+        if r.status_code == 200:
+            out = open(INDEX_PATH, "w")
+            out.write(r.text)
+        else:
+            print(
+                f"[ERROR] unable to get INDEX file from URL - HTTP Status-Code = {r.status_code}"
+            )
 
 
 def _printWrapper(pkg, size_mbytes):
