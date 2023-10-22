@@ -15,7 +15,7 @@ PRG_VERSION = "0.2"
 DEBUG = False
 
 # Change this to the closest mirror
-INDEX_URL = 'https://ftp.spline.de/pub/OpenBSD/7.2/packages/amd64/index.txt'
+INDEX_URL = 'https://ftp.spline.de/pub/OpenBSD/7.3/packages/amd64/index.txt'
 
 HOME_DIR = os.getenv('HOME')
 INDEX_DOT = '.index'
