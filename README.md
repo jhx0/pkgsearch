@@ -22,6 +22,10 @@ usage: pkgsearch [-h] [-e] [-i] package
 ```
 $ ./pkgsearch python3
 ```
+or with emojis displayed:
+```
+$ ./pkgsearch -e python3
+```
 
 pkgsearch was tested on the current OpenBSD release 7.3 but should also work on older systems.
 
