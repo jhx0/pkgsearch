@@ -34,9 +34,27 @@ def getIndex():
 
         return
     else:
-        r = requests.get(INDEX_URL)
-        out = open(INDEX_PATH, "w")
-        out.write(r.text)
+        try:
+            r = requests.get(INDEX_URL)
+        except requests.exceptions.RequestException as e:
+            print(f"[ERROR] unable to get INDEX file from URL - {e}")
+            return
+
+        if r.status_code != 200:
+            print(
+                f"[ERROR] unable to get INDEX file from URL '{INDEX_URL}' - HTTP Status-Code = {r.status_code}"
+            )
+            return
+        else:
+            try:
+                with open(INDEX_PATH, 'w') as out:
+                    try:
+                        out.write(r.text)
+                    except (IOError, OSError):
+                        print(f"[ERROR] Error writing to file {INDEX_PATH}")
+
+            except (FileNotFoundError, PermissionError, OSError):
+                print(f"[ERROR] Unable to open file {INDEX_PATH} for writing")
 
 
 def _printWrapper(pkg, size_mbytes):
@@ -54,7 +72,11 @@ def _printWrapper(pkg, size_mbytes):
 
 
 def queryIndex(needle):
-    f = open(INDEX_PATH, "r")
+    try:
+        f = open(INDEX_PATH, 'r')
+    except (FileNotFoundError, PermissionError, OSError):
+        print(f"[ERROR] Unable to open file {INDEX_PATH}")
+        return
 
     while True:
         data = f.readline()
