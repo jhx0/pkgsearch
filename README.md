@@ -1,11 +1,11 @@
 # pkgsearch
 
-- pkgsearch is a easy to use tool to search the OpenBSD package repository. 
+- pkgsearch is a easy to use tool to search the OpenBSD package repository.
 - pkgsearch downloads the current package index to the local system so as to make a search request fast. This also means searches can be made offline.
 - pkgsearch also provides emoji output with the **"-e"** flag.
 
 ```
-usage: pkgsearch [-h] [-e] [-i] package
+usage: pkgsearch [-h] [-e] [-i] [-v] package
 ```
 **Example Output**
 
@@ -39,4 +39,4 @@ INDEX_URL = 'https://ftp.spline.de/pub/OpenBSD/7.3/packages/amd64/index.txt'
 ...
 ```
 ## Thanks
-**Laurent Cheylus (https://github.com/lcheylus)** - Code cleanup and improvements (PEP8). Also for improving error handling.   
+**Laurent Cheylus (https://github.com/lcheylus)** - Code cleanup and improvements (PEP8). Also for improving error handling.
