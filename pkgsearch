@@ -27,7 +27,7 @@ emojiFlag = False
 indexFlag = False
 
 
-def getIndex():
+def get_index():
     if exists(INDEX_PATH) and not indexFlag:
         if DEBUG:
             print("[INFO] .index file already existing. Aborting download.")
@@ -57,7 +57,7 @@ def getIndex():
                 print(f"[ERROR] Unable to open file {INDEX_PATH} for writing")
 
 
-def _printWrapper(pkg, size_mbytes):
+def _print_wrapper(pkg, size_mbytes):
     if emojiFlag:
         # 57 was chosen since the longest str was 55 chars
         # This should cover every package name currently in
@@ -71,7 +71,7 @@ def _printWrapper(pkg, size_mbytes):
         print("{:<57} - Size: {:.2f}MB".format(pkg, size_mbytes))
 
 
-def queryIndex(needle):
+def query_index(needle):
     try:
         f = open(INDEX_PATH, 'r')
     except (FileNotFoundError, PermissionError, OSError):
@@ -96,12 +96,12 @@ def queryIndex(needle):
             # Convert to megabytes
             size_mbytes = int(size_bytes[0]) / 1048576
 
-            _printWrapper(pkg, size_mbytes)
+            _print_wrapper(pkg, size_mbytes)
 
     f.close()
 
 
-def printVersion():
+def print_version():
     print("{} {}".format(PRG_NAME, PRG_VERSION))
     sys.exit(0)
 
@@ -125,9 +125,9 @@ def main():
 
     needle = args.package
 
-    getIndex()
+    get_index()
 
-    queryIndex(needle)
+    query_index(needle)
 
 
 if __name__ == "__main__":
