@@ -22,12 +22,12 @@ INDEX_PATH = HOME_DIR + "/" + INDEX_DOT
 
 # Flags used throughout the program
 # Do not change these
-emojiFlag = False
-indexFlag = False
+emoji_flag = False
+index_flag = False
 
 
 def get_index():
-    if exists(INDEX_PATH) and not indexFlag:
+    if exists(INDEX_PATH) and not index_flag:
         if DEBUG:
             print("[INFO] .index file already existing. Aborting download.")
 
@@ -57,7 +57,7 @@ def get_index():
 
 
 def _print_wrapper(pkg, size_mbytes):
-    if emojiFlag:
+    if emoji_flag:
         # 57 was chosen since the longest str was 55 chars
         # This should cover every package name currently in
         # the OpenBSD repository
@@ -119,10 +119,10 @@ def main():
 
     args = parser.parse_args()
 
-    global emojiFlag
-    emojiFlag = args.emoji
-    global indexFlag
-    indexFlag = args.index
+    global emoji_flag
+    emoji_flag = args.emoji
+    global index_flag
+    index_flag = args.index
 
     needle = args.package
 
