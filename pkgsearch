@@ -2,7 +2,6 @@
 
 import re
 import os
-import sys
 import emoji
 import argparse
 import requests
@@ -101,11 +100,6 @@ def query_index(needle):
     f.close()
 
 
-def print_version():
-    print("{} {}".format(PRG_NAME, PRG_VERSION))
-    sys.exit(0)
-
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("package")
@@ -114,6 +108,13 @@ def main():
     )
     parser.add_argument(
         "-i", "--index", help="download index", action="store_true"
+    )
+    parser.add_argument(
+        "-v",
+        "--version",
+        help="display version",
+        action="version",
+        version=f"{PRG_NAME} {PRG_VERSION}",
     )
 
     args = parser.parse_args()
