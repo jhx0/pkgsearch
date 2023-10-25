@@ -5,7 +5,7 @@ import os
 import emoji
 import argparse
 import requests
-from os.path import exists
+import sys
 
 PRG_NAME = "pkgsearch"
 PRG_VERSION = "0.4"
@@ -16,9 +16,9 @@ DEBUG = False
 # Change this to the closest mirror
 INDEX_URL = 'https://ftp.spline.de/pub/OpenBSD/7.3/packages/amd64/index.txt'
 
-HOME_DIR = os.getenv('HOME')
-INDEX_DOT = '.index'
-INDEX_PATH = HOME_DIR + "/" + INDEX_DOT
+CACHE_DIR = os.getenv('HOME') + '/.cache/' + PRG_NAME
+INDEX_FILE = 'index'
+INDEX_PATH = CACHE_DIR + '/' + INDEX_FILE
 
 # Flags used throughout the program
 # Do not change these
@@ -26,8 +26,21 @@ emoji_flag = False
 index_flag = False
 
 
+def create_cache_dir():
+    try:
+        os.makedirs(CACHE_DIR)
+    except FileExistsError:
+        if DEBUG:
+            print("[INFO] cache directory already existing. Aborting creation.")
+
+        return
+    except OSError as e:
+        print(f"[ERROR] unable to create cache directory {CACHE_DIR} - {e}")
+        sys.exit(0)
+
+
 def get_index():
-    if exists(INDEX_PATH) and not index_flag:
+    if os.path.exists(INDEX_PATH) and not index_flag:
         if DEBUG:
             print("[INFO] .index file already existing. Aborting download.")
 
@@ -126,6 +139,7 @@ def main():
 
     needle = args.package
 
+    create_cache_dir()
     get_index()
 
     query_index(needle)
