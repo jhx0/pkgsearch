@@ -2,11 +2,10 @@
 
 import re
 import os
-import sys
 import emoji
 import argparse
 import requests
-from os.path import exists
+import sys
 
 PRG_NAME = "pkgsearch"
 PRG_VERSION = "0.4"
@@ -17,18 +16,31 @@ DEBUG = False
 # Change this to the closest mirror
 INDEX_URL = 'https://ftp.spline.de/pub/OpenBSD/7.3/packages/amd64/index.txt'
 
-HOME_DIR = os.getenv('HOME')
-INDEX_DOT = '.index'
-INDEX_PATH = HOME_DIR + "/" + INDEX_DOT
+CACHE_DIR = os.getenv('HOME') + '/.cache/' + PRG_NAME
+INDEX_FILE = 'index'
+INDEX_PATH = CACHE_DIR + '/' + INDEX_FILE
 
 # Flags used throughout the program
 # Do not change these
-emojiFlag = False
-indexFlag = False
+emoji_flag = False
+index_flag = False
 
 
-def getIndex():
-    if exists(INDEX_PATH) and not indexFlag:
+def create_cache_dir():
+    try:
+        os.makedirs(CACHE_DIR)
+    except FileExistsError:
+        if DEBUG:
+            print("[INFO] cache directory already existing. Aborting creation.")
+
+        return
+    except OSError as e:
+        print(f"[ERROR] unable to create cache directory {CACHE_DIR} - {e}")
+        sys.exit(0)
+
+
+def get_index():
+    if os.path.exists(INDEX_PATH) and not index_flag:
         if DEBUG:
             print("[INFO] .index file already existing. Aborting download.")
 
@@ -38,13 +50,13 @@ def getIndex():
             r = requests.get(INDEX_URL)
         except requests.exceptions.RequestException as e:
             print(f"[ERROR] unable to get INDEX file from URL - {e}")
-            return
+            sys.exit(0)
 
         if r.status_code != 200:
             print(
                 f"[ERROR] unable to get INDEX file from URL '{INDEX_URL}' - HTTP Status-Code = {r.status_code}"
             )
-            return
+            sys.exit(0)
         else:
             try:
                 with open(INDEX_PATH, 'w') as out:
@@ -52,13 +64,15 @@ def getIndex():
                         out.write(r.text)
                     except (IOError, OSError):
                         print(f"[ERROR] Error writing to file {INDEX_PATH}")
+                        sys.exit(0)
 
             except (FileNotFoundError, PermissionError, OSError):
                 print(f"[ERROR] Unable to open file {INDEX_PATH} for writing")
+                sys.exit(0)
 
 
-def _printWrapper(pkg, size_mbytes):
-    if emojiFlag:
+def _print_wrapper(pkg, size_mbytes):
+    if emoji_flag:
         # 57 was chosen since the longest str was 55 chars
         # This should cover every package name currently in
         # the OpenBSD repository
@@ -71,7 +85,7 @@ def _printWrapper(pkg, size_mbytes):
         print("{:<57} - Size: {:.2f}MB".format(pkg, size_mbytes))
 
 
-def queryIndex(needle):
+def query_index(needle):
     try:
         f = open(INDEX_PATH, 'r')
     except (FileNotFoundError, PermissionError, OSError):
@@ -96,14 +110,9 @@ def queryIndex(needle):
             # Convert to megabytes
             size_mbytes = int(size_bytes[0]) / 1048576
 
-            _printWrapper(pkg, size_mbytes)
+            _print_wrapper(pkg, size_mbytes)
 
     f.close()
-
-
-def printVersion():
-    print("{} {}".format(PRG_NAME, PRG_VERSION))
-    sys.exit(0)
 
 
 def main():
@@ -115,19 +124,27 @@ def main():
     parser.add_argument(
         "-i", "--index", help="download index", action="store_true"
     )
+    parser.add_argument(
+        "-v",
+        "--version",
+        help="display version",
+        action="version",
+        version=f"{PRG_NAME} {PRG_VERSION}",
+    )
 
     args = parser.parse_args()
 
-    global emojiFlag
-    emojiFlag = args.emoji
-    global indexFlag
-    indexFlag = args.index
+    global emoji_flag
+    emoji_flag = args.emoji
+    global index_flag
+    index_flag = args.index
 
     needle = args.package
 
-    getIndex()
+    create_cache_dir()
+    get_index()
 
-    queryIndex(needle)
+    query_index(needle)
 
 
 if __name__ == "__main__":
