@@ -39,4 +39,4 @@ INDEX_URL = 'https://ftp.spline.de/pub/OpenBSD/7.3/packages/amd64/index.txt'
 ...
 ```
 ## Thanks
-**Laurent Cheylus (https://github.com/lcheylus)** - Code cleanup and improvements (PEP8). Also for improving error handling.
+**Laurent Cheylus (https://github.com/lcheylus)** - Code cleanup and improvements (PEP8). Also for improving error handling. Adding the "-v" flag and further improving the code.
