@@ -39,4 +39,5 @@ INDEX_URL = 'https://ftp.spline.de/pub/OpenBSD/7.3/packages/amd64/index.txt'
 ...
 ```
 ## Thanks
-**Laurent Cheylus (https://github.com/lcheylus)** - Code cleanup and improvements (PEP8). Also for improving error handling. Adding the "-v" flag and further improving the code.
+**Laurent Cheylus (https://github.com/lcheylus)** - Code cleanup and improvements (PEP8). Also for improving error handling. Adding the "-v" flag and further improving the code.   
+**Cuddle (https://github.com/lcheylus)** and **Laurent Cheylus (https://mastodon.bsd.cafe/@cuddle)** - Cuddle: For improving the codebase and removing the need for a external Python package (Emojis). Laurent Cheylus: For reviewing/creating the PR.
