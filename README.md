@@ -16,7 +16,7 @@ usage: pkgsearch [-h] [-e] [-i] [-v] package
 1. Clone/Download the code in this repository
 2. Install the necessary dependencies
 ```
-# pkg_add python py3-emoji py3-requests
+# pkg_add python py3-requests
 ```
 3. Execute (For example):
 ```
