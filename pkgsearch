@@ -7,7 +7,7 @@ import requests
 import sys
 
 PRG_NAME = "pkgsearch"
-PRG_VERSION = "0.5"
+PRG_VERSION = "0.6"
 
 # Only for debugging
 DEBUG = False
