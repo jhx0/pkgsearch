@@ -16,7 +16,7 @@ DEBUG = False
 # Change this to the closest mirror
 INDEX_URL = 'https://ftp.spline.de/pub/OpenBSD/7.3/packages/amd64/index.txt'
 
-CACHE_DIR = os.getenv('HOME') + '/.cache/' + PRG_NAME
+CACHE_DIR = '{0}/.cache/{1}'.format(os.getenv('HOME'), PRG_NAME)
 INDEX_FILE = 'index'
 INDEX_PATH = CACHE_DIR + '/' + INDEX_FILE
 
