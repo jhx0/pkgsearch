@@ -20,11 +20,6 @@ CACHE_DIR = '{0}/.cache/{1}'.format(os.getenv('HOME'), PRG_NAME)
 INDEX_FILE = 'index'
 INDEX_PATH = CACHE_DIR + '/' + INDEX_FILE
 
-# Flags used throughout the program
-# Do not change these
-emoji_flag = False
-index_flag = False
-
 
 def create_cache_dir():
     try:
@@ -39,7 +34,7 @@ def create_cache_dir():
         sys.exit(0)
 
 
-def get_index():
+def get_index(index_flag: bool):
     if os.path.exists(INDEX_PATH) and not index_flag:
         if DEBUG:
             print("[INFO] .index file already existing. Aborting download.")
@@ -71,7 +66,7 @@ def get_index():
                 sys.exit(0)
 
 
-def _print_wrapper(pkg, size_mbytes):
+def _print_wrapper(pkg, size_mbytes, emoji_flag: bool):
     if emoji_flag:
         # 57 was chosen since the longest str was 55 chars
         # This should cover every package name currently in
@@ -85,7 +80,7 @@ def _print_wrapper(pkg, size_mbytes):
         print("{:<57} - Size: {:.2f}MB".format(pkg, size_mbytes))
 
 
-def query_index(needle):
+def query_index(needle: str, emoji_flag: bool):
     try:
         f = open(INDEX_PATH, 'r')
     except (FileNotFoundError, PermissionError, OSError):
@@ -110,7 +105,7 @@ def query_index(needle):
             # Convert to megabytes
             size_mbytes = int(size_bytes[0]) / 1048576
 
-            _print_wrapper(pkg, size_mbytes)
+            _print_wrapper(pkg, size_mbytes, emoji_flag)
 
     f.close()
 
@@ -134,17 +129,12 @@ def main():
 
     args = parser.parse_args()
 
-    global emoji_flag
-    emoji_flag = args.emoji
-    global index_flag
-    index_flag = args.index
-
     needle = args.package
 
     create_cache_dir()
-    get_index()
+    get_index(args.index)
 
-    query_index(needle)
+    query_index(needle, args.emoji)
 
 
 if __name__ == "__main__":
