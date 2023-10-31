@@ -5,7 +5,7 @@
 - pkgsearch also provides emoji output with the **"-e"** flag.
 
 ```
-usage: pkgsearch [-h] [-e] [-i] [-v] package
+usage: pkgsearch [-h] [-e] [-i] [-v] [-d] package
 ```
 **Example Output**
 
