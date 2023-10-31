@@ -9,9 +9,6 @@ import sys
 PRG_NAME = "pkgsearch"
 PRG_VERSION = "0.6"
 
-# Only for debugging
-DEBUG = False
-
 # Change this to the closest mirror
 INDEX_URL = 'https://ftp.spline.de/pub/OpenBSD/7.3/packages/amd64/index.txt'
 
@@ -22,7 +19,7 @@ INDEX_PATH = CACHE_DIR + '/' + INDEX_FILE
 PKG_EMOJI = '\U0001F4E6'
 
 
-def create_cache_dir():
+def create_cache_dir(DEBUG):
     try:
         os.makedirs(CACHE_DIR)
     except FileExistsError:
@@ -35,7 +32,7 @@ def create_cache_dir():
         sys.exit(0)
 
 
-def get_index(index_flag: bool):
+def get_index(DEBUG, index_flag: bool):
     if os.path.exists(INDEX_PATH) and not index_flag:
         if DEBUG:
             print("[INFO] .index file already existing. Aborting download.")
@@ -123,13 +120,23 @@ def main():
         action="version",
         version=f"{PRG_NAME} {PRG_VERSION}",
     )
+    parser.add_argument(
+        "-d",
+        "--debug",
+        help="enable debug info",
+        action='store_true'
+    )
 
     args = parser.parse_args()
 
+    DEBUG=False
+    if args.debug:
+        DEBUG=True
+
     needle = args.package
 
-    create_cache_dir()
-    get_index(args.index)
+    create_cache_dir(DEBUG)
+    get_index(DEBUG, args.index)
 
     query_index(needle, args.emoji)
 
