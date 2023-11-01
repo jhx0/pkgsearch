@@ -42,5 +42,5 @@ Make sure you set your desired mirror. This can be done by changing the **INDEX_
 MIRROR_URL = 'https://ftp.fr.openbsd.org/pub/OpenBSD'
 ```
 ## Thanks
-**Laurent Cheylus (https://github.com/lcheylus)** - Code cleanup and improvements (PEP8). Also for improving error handling. Adding the "-v" flag and further improving the code.
-**Cuddle (https://mastodon.bsd.cafe/@cuddle)** and **Laurent Cheylus (https://github.com/lcheylus)** - Cuddle: For improving the codebase and removing the need for a external Python package (Emojis). Laurent Cheylus: For reviewing/creating the PR.
+- **Laurent Cheylus (https://github.com/lcheylus)** - Code cleanup and improvements (PEP8). Also for improving error handling. Adding the "-v" flag and further improving the code.
+- **Cuddle (https://mastodon.bsd.cafe/@cuddle)** and **Laurent Cheylus (https://github.com/lcheylus)** - Cuddle: For improving the codebase and removing the need for a external Python package (Emojis). Laurent Cheylus: For reviewing/creating the PR.
