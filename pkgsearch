@@ -57,8 +57,11 @@ def create_cache_dir():
         sys.exit(0)
 
 
-def get_index(version: str, index_path: str, index_flag: bool):
-    index_url = '{0}/{1}/packages/amd64/index.txt'.format(MIRROR_URL, version)
+def get_index(snapshot: bool, version: str, index_path: str, index_flag: bool):
+    if snapshot:
+        index_url = '{0}/snapshots/packages/amd64/index.txt'.format(MIRROR_URL)
+    else:
+        index_url = '{0}/{1}/packages/amd64/index.txt'.format(MIRROR_URL, version)
 
     if os.path.exists(index_path) and not index_flag:
         if DEBUG:
@@ -140,12 +143,21 @@ def main():
     parser.add_argument(
         "-i", "--index", help="download index", action="store_true"
     )
-    parser.add_argument(
+
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
         "-r",
         "--release",
         help=f"release to search for packages (default = {CURRENT_RELEASE})",
         default=CURRENT_RELEASE,
     )
+    group.add_argument(
+        "-s",
+        "--snapshot",
+        help="search for packages in snapshots",
+        action="store_true"
+    )
+
     parser.add_argument(
         "-v",
         "--version",
@@ -160,12 +172,19 @@ def main():
         print(f"[ERROR] invalid release '{args.release}'")
         sys.exit(0)
 
-    index_path = '{0}/index-{1}'.format(CACHE_DIR, args.release)
+    if args.snapshot:
+        index_path = '{0}/index-snapshots'.format(CACHE_DIR)
+    else:
+        index_path = '{0}/index-{1}'.format(CACHE_DIR, args.release)
 
     create_cache_dir()
-    get_index(args.release, index_path, args.index)
 
-    print(f"Search packages '{args.package}' for release {args.release}")
+    get_index(args.snapshot, args.release, index_path, args.index)
+
+    if args.snapshot:
+        print(f"Search packages '{args.package}' in snapshots")
+    else:
+        print(f"Search packages '{args.package}' for release {args.release}")
     query_index(index_path, args.package, args.emoji)
 
 
