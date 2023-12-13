@@ -13,6 +13,19 @@ PRG_VERSION = "0.8"
 # Only for debugging
 DEBUG = False
 
+# Available architectures for packages
+ARCHS = [
+    'aarch64',
+    'amd64',
+    'arm',
+    'i386',
+    'mips64',
+    'powerpc',
+    'powerpc64',
+    'riscv64',
+    'sparc64',
+]
+
 # Last OpenBSD release
 CURRENT_RELEASE = '7.4'
 
@@ -57,11 +70,15 @@ def create_cache_dir():
         sys.exit(0)
 
 
-def get_index(snapshot: bool, version: str, index_path: str, index_flag: bool):
+def get_index(snapshot: bool, version: str, arch: str, index_path: str, index_flag: bool):
     if snapshot:
-        index_url = '{0}/snapshots/packages/amd64/index.txt'.format(MIRROR_URL)
+        index_url = '{0}/snapshots/packages/{1}/index.txt'.format(
+            MIRROR_URL, arch
+        )
     else:
-        index_url = '{0}/{1}/packages/amd64/index.txt'.format(MIRROR_URL, version)
+        index_url = '{0}/{1}/packages/{2}/index.txt'.format(
+            MIRROR_URL, version, arch
+        )
 
     if os.path.exists(index_path) and not index_flag:
         if DEBUG:
@@ -85,6 +102,9 @@ def get_index(snapshot: bool, version: str, index_path: str, index_flag: bool):
                 with open(index_path, 'w') as out:
                     try:
                         out.write(r.text)
+                        if DEBUG:
+                            print(f"[INFO] write index file {index_path}")
+
                     except (IOError, OSError):
                         print(f"[ERROR] Error writing to file {index_path}")
                         sys.exit(0)
@@ -155,7 +175,14 @@ def main():
         "-s",
         "--snapshot",
         help="search for packages in snapshots",
-        action="store_true"
+        action="store_true",
+    )
+
+    parser.add_argument(
+        "-a",
+        "--arch",
+        help="arch to search for packages (default = amd64)",
+        default='amd64',
     )
 
     parser.add_argument(
@@ -172,19 +199,28 @@ def main():
         print(f"[ERROR] invalid release '{args.release}'")
         sys.exit(0)
 
+    if args.arch not in ARCHS:
+        print(f"[ERROR] invalid arch '{args.arch}'")
+        print("Available archs: ", end='')
+        for arch in ARCHS:
+            print(f"{arch} ", end='')
+        print("")
+        sys.exit(0)
+
     if args.snapshot:
-        index_path = '{0}/index-snapshots'.format(CACHE_DIR)
+        index_path = '{0}/index-{1}-snapshots'.format(CACHE_DIR, args.arch)
     else:
-        index_path = '{0}/index-{1}'.format(CACHE_DIR, args.release)
+        index_path = '{0}/index-{1}-{2}'.format(CACHE_DIR, args.arch, args.release)
 
     create_cache_dir()
 
-    get_index(args.snapshot, args.release, index_path, args.index)
+    get_index(args.snapshot, args.release, args.arch, index_path, args.index)
 
     if args.snapshot:
-        print(f"Search packages '{args.package}' in snapshots")
+        print(f"Search packages '{args.package}' in snapshots for arch {args.arch}")
     else:
-        print(f"Search packages '{args.package}' for release {args.release}")
+        print(f"Search packages '{args.package}' for release {args.release} / arch {args.arch}")
+
     query_index(index_path, args.package, args.emoji)
 
 
