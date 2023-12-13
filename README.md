@@ -6,6 +6,19 @@
 
 ```
 usage: pkgsearch [-h] [-e] [-i] [-r RELEASE | -s] [-a ARCH] [-v] package
+
+positional arguments:
+  package
+
+options:
+  -h, --help            show this help message and exit
+  -e, --emoji           turn on emoji output
+  -i, --index           download index
+  -r RELEASE, --release RELEASE
+                        release to search for packages (default = 7.4)
+  -s, --snapshot        search for packages in snapshots
+  -a ARCH, --arch ARCH  arch to search for packages (default = amd64)
+  -v, --version         display version
 ```
 **Example Output**
 
