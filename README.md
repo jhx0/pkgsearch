@@ -1,11 +1,11 @@
 # pkgsearch
 
 - pkgsearch is a easy to use tool to search the OpenBSD package repository.
-- pkgsearch downloads the current package index for defined release (current default = 7.4) or snapshots to the local system so as to make a search request fast. This also means searches can be made offline.
+- pkgsearch downloads the current package index for defined release (current default = 7.4) or snapshots and defined architecture (default = amd64) to the local system so as to make a search request fast. This also means searches can be made offline.
 - pkgsearch also provides emoji output with the **"-e"** flag.
 
 ```
-usage: pkgsearch [-h] [-e] [-i] [-r RELEASE | -s] [-v] package
+usage: pkgsearch [-h] [-e] [-i] [-r RELEASE | -s] [-a ARCH] [-v] package
 ```
 **Example Output**
 
@@ -42,6 +42,6 @@ Make sure you set your desired mirror. This can be done by changing the **INDEX_
 MIRROR_URL = 'https://ftp.fr.openbsd.org/pub/OpenBSD'
 ```
 ## Thanks
-- **Laurent Cheylus (https://github.com/lcheylus)** - Code cleanup and improvements (PEP8). Also for improving error handling. Adding the "-v" flag and further improving the code. Adding the "-r" option and improving the code further. Adding the "-s" (snapshot) option.   
+- **Laurent Cheylus (https://github.com/lcheylus)** - Code cleanup and improvements (PEP8). Also for improving error handling. Adding the "-v" flag and further improving the code. Adding the "-r" option and improving the code further. Adding the "-s" (snapshot) option.
 - **Cuddle (https://mastodon.bsd.cafe/@cuddle)** and **Laurent Cheylus (https://github.com/lcheylus)** - Cuddle: For improving the codebase and removing the need for a external Python package (Emojis). Laurent Cheylus: For reviewing/creating the PR.
 - **Alexander Naumov** (https://github.com/alexander-naumov) - Suggestions regarding debugging.
