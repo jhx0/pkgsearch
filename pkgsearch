@@ -6,6 +6,7 @@ import argparse
 from packaging.version import InvalidVersion, parse
 import requests
 import sys
+import time
 
 PRG_NAME = "pkgsearch"
 PRG_VERSION = "0.9"
@@ -25,6 +26,9 @@ ARCHS = [
     'riscv64',
     'sparc64',
 ]
+
+# Max age for index file (in seconds)
+MAX_AGE = 24 * 60 * 60
 
 # Last OpenBSD release
 CURRENT_RELEASE = '7.4'
@@ -57,6 +61,14 @@ def check_release(version: str):
     return True
 
 
+def file_age_in_seconds(filename):
+    """Get file age in seconds."""
+    try:
+        return int(time.time() - os.path.getmtime(filename))
+    except OSError:
+        return -1
+
+
 def create_cache_dir():
     try:
         os.makedirs(CACHE_DIR)
@@ -80,9 +92,20 @@ def get_index(snapshot: bool, version: str, arch: str, index_path: str, index_fl
             MIRROR_URL, version, arch
         )
 
-    if os.path.exists(index_path) and not index_flag:
+    if not snapshot and os.path.exists(index_path) and not index_flag:
         if DEBUG:
             print("[INFO] index file already existing. Aborting download.")
+
+        return
+    # Force download of index for snapshots if too old
+    elif (
+        snapshot
+        and not index_flag
+        and file_age_in_seconds(index_path) != -1
+        and file_age_in_seconds(index_path) <= MAX_AGE
+    ):
+        if DEBUG:
+            print(f"[INFO] index file age <= {MAX_AGE} seconds. Aborting download.")
 
         return
     else:
