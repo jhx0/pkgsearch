@@ -31,7 +31,7 @@ ARCHS = [
 MAX_AGE = 24 * 60 * 60
 
 # Last OpenBSD release
-CURRENT_RELEASE = '7.4'
+CURRENT_RELEASE = '7.5'
 
 # Use the CDN mirror by default
 MIRROR_URL = 'https://cdn.openbsd.org/pub/OpenBSD/'
