@@ -15,7 +15,7 @@ options:
   -e, --emoji           turn on emoji output
   -i, --index           download index
   -r RELEASE, --release RELEASE
-                        release to search for packages (default = 7.4)
+                        release to search for packages (default = 7.5)
   -s, --snapshot        search for packages in snapshots
   -a ARCH, --arch ARCH  arch to search for packages (default = amd64)
   -v, --version         display version
