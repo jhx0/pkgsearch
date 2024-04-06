@@ -1,7 +1,7 @@
 # pkgsearch
 
 - pkgsearch is a easy to use tool to search the OpenBSD package repository.
-- pkgsearch downloads the current package index for defined release (current default = 7.4) or snapshots and defined architecture (default = amd64) to the local system so as to make a search request fast. This also means searches can be made offline.
+- pkgsearch downloads the current package index for defined release (current default = 7.5) or snapshots and defined architecture (default = amd64) to the local system so as to make a search request fast. This also means searches can be made offline.
 - pkgsearch also provides emoji output with the **"-e"** flag.
 
 ```
@@ -42,10 +42,10 @@ $ ./pkgsearch -e python3
 
 You could also search for an older OpenBSD release with `-r` argument:
 ```
-$ ./pkgsearch -r 7.3 vim
+$ ./pkgsearch -r 7.4 vim
 ```
 
-pkgsearch was tested on the current OpenBSD release 7.4 but should also work on older systems.
+pkgsearch was tested on the current OpenBSD release 7.5 but should also work on older systems.
 
 ## Hint
 Make sure you set your desired mirror. This can be done by changing the **INDEX_URL** variable in the pkgsearch script.
@@ -55,6 +55,6 @@ Make sure you set your desired mirror. This can be done by changing the **INDEX_
 MIRROR_URL = 'https://ftp.fr.openbsd.org/pub/OpenBSD'
 ```
 ## Thanks
-- **Laurent Cheylus (https://github.com/lcheylus)** - Code cleanup and improvements (PEP8). Also for improving error handling. Adding the "-v" flag and further improving the code. Adding the "-r" option and improving the code further. Adding the "-s" (snapshot) option. Adding the "-a" (Arch) option. Refining the code and providing fixes.   
+- **Laurent Cheylus (https://github.com/lcheylus)** - Code cleanup and improvements (PEP8). Also for improving error handling. Adding the "-v" flag and further improving the code. Adding the "-r" option and improving the code further. Adding the "-s" (snapshot) option. Adding the "-a" (Arch) option. Refining the code and providing fixes.
 - **Cuddle (https://mastodon.bsd.cafe/@cuddle)** and **Laurent Cheylus (https://github.com/lcheylus)** - Cuddle: For improving the codebase and removing the need for a external Python package (Emojis). Laurent Cheylus: For reviewing/creating the PR.
 - **Alexander Naumov** (https://github.com/alexander-naumov) - Suggestions regarding debugging.
