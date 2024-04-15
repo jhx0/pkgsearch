@@ -175,7 +175,7 @@ def query_index(index_path: str, needle: str, emoji_flag: bool):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("package")
+    parser.add_argument("package", help="regexp to search packages")
     parser.add_argument(
         "-e", "--emoji", help="turn on emoji output", action="store_true"
     )
