@@ -214,6 +214,12 @@ def main():
 
     args = parser.parse_args()
 
+    try:
+        re.compile(args.package)
+    except re.error:
+        print(f"[ERROR] invalid regexp '{args.package}' to search packages")
+        sys.exit(0)
+
     if not check_release(args.release):
         print(f"[ERROR] invalid release '{args.release}'")
         sys.exit(0)
