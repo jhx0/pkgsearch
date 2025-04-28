@@ -1,7 +1,7 @@
 # pkgsearch
 
 - pkgsearch is a easy to use tool to search the OpenBSD package repository.
-- pkgsearch downloads the current package index for defined release (current default = 7.6) or snapshots and defined architecture (default = amd64) to the local system so as to make a search request fast. This also means searches can be made offline.
+- pkgsearch downloads the current package index for defined release (current default = 7.7) or snapshots and defined architecture (default = amd64) to the local system so as to make a search request fast. This also means searches can be made offline.
 - pkgsearch also provides emoji output with the **"-e"** flag.
 
 ```
@@ -15,7 +15,7 @@ options:
   -e, --emoji           turn on emoji output
   -i, --index           download index
   -r RELEASE, --release RELEASE
-                        release to search for packages (default = 7.6)
+                        release to search for packages (default = 7.7)
   -s, --snapshot        search for packages in snapshots
   -a ARCH, --arch ARCH  arch to search for packages (default = amd64)
   -v, --version         display version
@@ -46,7 +46,7 @@ You could also search for an older OpenBSD release with `-r` argument:
 $ ./pkgsearch -r 7.4 vim
 ```
 
-pkgsearch was tested on the current OpenBSD release 7.6 but should also work on older systems.
+pkgsearch was tested on the current OpenBSD release 7.7 but should also work on older systems.
 
 ## Hint
 Make sure you set your desired mirror. This can be done by changing the **INDEX_URL** variable in the pkgsearch script.
