@@ -1,7 +1,7 @@
 # pkgsearch
 
 - pkgsearch is a easy to use tool to search the OpenBSD package repository.
-- pkgsearch downloads the current package index for defined release (current default = 7.4) or snapshots and defined architecture (default = amd64) to the local system so as to make a search request fast. This also means searches can be made offline.
+- pkgsearch downloads the current package index for defined release (current default = 7.8) or snapshots and defined architecture (default = amd64) to the local system so as to make a search request fast. This also means searches can be made offline.
 - pkgsearch also provides emoji output with the **"-e"** flag.
 
 ```
