@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
-import re
-import os
 import argparse
-from packaging.version import InvalidVersion, parse
-import requests
+import os
+import re
 import sys
 import time
+
+import requests
+from packaging.version import InvalidVersion, parse
 
 PRG_NAME = "pkgsearch"
 PRG_VERSION = "1.0"
@@ -38,7 +39,7 @@ MIRROR_URL = 'https://cdn.openbsd.org/pub/OpenBSD/'
 
 CACHE_DIR = '{:s}/.cache/{:s}'.format(os.getenv('HOME'), PRG_NAME)
 
-PKG_EMOJI = '\U0001F4E6'
+PKG_EMOJI = '\U0001f4e6'
 
 
 def check_release(version: str):
@@ -53,12 +54,9 @@ def check_release(version: str):
     if m is None:
         return False
 
-    if (parse(version) > parse(CURRENT_RELEASE)) or (
-        parse(version) < parse('2.0')
-    ):
-        return False
-
-    return True
+    return not (
+        parse(version) > parse(CURRENT_RELEASE) or parse(version) < parse('2.0')
+    )
 
 
 def file_age_in_seconds(filename):
@@ -82,7 +80,9 @@ def create_cache_dir():
         sys.exit(0)
 
 
-def get_index(snapshot: bool, version: str, arch: str, index_path: str, index_flag: bool):
+def get_index(
+    snapshot: bool, version: str, arch: str, index_path: str, index_flag: bool
+):
     if snapshot:
         index_url = f'{MIRROR_URL}/snapshots/packages/{arch}/index.txt'
     else:
@@ -101,7 +101,9 @@ def get_index(snapshot: bool, version: str, arch: str, index_path: str, index_fl
         and file_age_in_seconds(index_path) <= MAX_AGE
     ):
         if DEBUG:
-            print(f"[INFO] index file age <= {MAX_AGE} seconds. Aborting download.")
+            print(
+                f"[INFO] index file age <= {MAX_AGE} seconds. Aborting download."
+            )
 
         return
     else:
@@ -124,7 +126,7 @@ def get_index(snapshot: bool, version: str, arch: str, index_path: str, index_fl
                         if DEBUG:
                             print(f"[INFO] write index file {index_path}")
 
-                    except (IOError, OSError):
+                    except OSError:
                         print(f"[ERROR] Error writing to file {index_path}")
                         sys.exit(0)
 
@@ -162,13 +164,9 @@ def query_index(index_path: str, needle: str, emoji_flag: bool):
                 # 57 was chosen since the longest str was 55 chars
                 # This should cover every package name currently in
                 # the OpenBSD repository
-                print(
-                    "{} {:<57} - Size: {:.2f}MB".format(
-                        PKG_EMOJI, pkg, size_mbytes
-                    )
-                )
+                print(f"{PKG_EMOJI} {pkg:<57} - Size: {size_mbytes:.2f}MB")
             else:
-                print("{:<57} - Size: {:.2f}MB".format(pkg, size_mbytes))
+                print(f"{pkg:<57} - Size: {size_mbytes:.2f}MB")
 
     f.close()
 
@@ -224,18 +222,22 @@ def main():
         sys.exit(0)
 
     if args.snapshot:
-        index_path = '{0}/index-{1}-snapshots'.format(CACHE_DIR, args.arch)
+        index_path = f'{CACHE_DIR}/index-{args.arch}-snapshots'
     else:
-        index_path = '{0}/index-{1}-{2}'.format(CACHE_DIR, args.arch, args.release)
+        index_path = f'{CACHE_DIR}/index-{args.arch}-{args.release}'
 
     create_cache_dir()
 
     get_index(args.snapshot, args.release, args.arch, index_path, args.index)
 
     if args.snapshot:
-        print(f"Search packages '{args.package}' in snapshots for arch {args.arch}")
+        print(
+            f"Search packages '{args.package}' in snapshots for arch {args.arch}"
+        )
     else:
-        print(f"Search packages '{args.package}' for release {args.release} / arch {args.arch}")
+        print(
+            f"Search packages '{args.package}' for release {args.release} / arch {args.arch}"
+        )
 
     query_index(index_path, args.package, args.emoji)
 
